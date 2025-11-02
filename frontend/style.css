@@ -1,0 +1,307 @@
+/* --- RAÍZ DE CORES E FONTES --- */
+:root {
+    --bg-color: #1e1e1e;
+    --card-color: #2d2d2d;
+    --border-color: #444;
+    --text-primary: #f1f1f1;
+    --text-secondary: #b0b0b0;
+    --accent-color: #0078d4; /* Azul Power BI */
+    --accent-hover: #005a9e;
+    --accent-green: #107c10; /* Verde Excel */
+    --accent-green-hover: #0a5d0a;
+    --success-color: #107c10;
+    --warning-color: #d83b01;
+    --sidebar-width: 240px;
+    --sidebar-width-recolhido: 70px;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    margin: 0;
+    padding-left: var(--sidebar-width-recolhido);
+    transition: padding-left 0.3s ease-in-out;
+}
+
+/* --- SEU MENU LATERAL (ESTILO GEMINI/POWER BI) --- */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background-color: #1a1a1a;
+    border-right: 1px solid var(--border-color);
+    transform: translateX(calc(var(--sidebar-width-recolhido) - var(--sidebar-width)));
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    overflow: hidden;
+}
+.sidebar:hover {
+    transform: translateX(0);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.sidebar-header, .sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+.sidebar-header {
+    padding: 20px 24px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+}
+.sidebar-icon {
+    font-size: 1.5rem;
+    min-width: 22px; 
+    text-align: center;
+    margin-right: 22px;
+}
+.sidebar-menu {
+    list-style: none;
+    padding: 0 15px;
+}
+.sidebar-menu li a {
+    padding: 12px 10px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 6px;
+    margin-bottom: 5px;
+}
+.sidebar-menu li a:hover {
+    background-color: var(--card-color);
+    color: #fff;
+}
+
+/* --- CONTEÚDO PRINCIPAL (DASHBOARD) --- */
+.content {
+    margin-left: 0;
+    padding: 30px 40px;
+    max-width: 1400px;
+}
+h1, h2 {
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+h2 {
+    margin-top: 40px;
+    font-size: 1.5rem;
+}
+
+/* --- CARD DE UPLOAD OTIMIZADO --- */
+.card {
+    background-color: var(--card-color);
+    border-radius: 8px;
+    padding: 25px 30px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.card-upload h2 {
+    margin-top: 0;
+    border-bottom: none;
+    font-size: 1.2rem;
+}
+.form-row {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 25px;
+}
+.form-group {
+    flex: 1;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+.form-group input[type="file"] {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+/* --- LINHA DE BOTÕES --- */
+.button-row {
+    display: flex;
+    gap: 15px; /* Espaço entre os botões */
+    margin-top: 25px;
+}
+
+button {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    flex: 1; /* Faz os botões ocuparem o espaço */
+}
+button:hover {
+    background-color: var(--accent-hover);
+}
+button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+
+/* --- "JANELAS" DE RESULTADO --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+}
+.card-resultado {
+    background-color: var(--card-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border-left: 5px solid var(--border-color);
+    transition: border-color 0.3s;
+}
+.card-resultado.ok { border-left-color: var(--success-color); }
+.card-resultado.divergente { border-left-color: var(--warning-color); }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+}
+.card-header h3 { margin: 0; font-size: 1.1rem; }
+.card-body { padding: 20px; }
+.card-body p { margin: 5px 0 12px; font-size: 1rem; color: var(--text-secondary); }
+.card-body p strong { color: var(--text-primary); }
+.card-body span { font-weight: 600; color: var(--text-primary); }
+
+.status-box {
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #fff;
+    min-width: 100px;
+}
+.status-box.ok { background-color: var(--success-color); }
+.status-box.ok::before { content: '✅ '; }
+.status-box.divergente { background-color: var(--warning-color); }
+.status-box.divergente::before { content: '⚠️ '; }
+.status-box.aguardando { background-color: #555; }
+
+.card-largo { grid-column: 1 / -1; }
+.card-body-apuracao { display: flex; flex-wrap: wrap; justify-content: space-between; padding: 20px; }
+.coluna { flex: 1; min-width: 250px; padding-right: 20px; border-right: 1px solid var(--border-color); }
+.coluna:last-child { border-right: none; padding-right: 0; }
+.coluna h4 { margin-top: 0; color: var(--text-secondary); font-weight: 600; }
+.coluna p { font-size: 0.95rem; color: var(--text-primary); }
+.coluna span { font-weight: 600; }
+.coluna-status { flex-basis: 200px; flex-grow: 0; padding-left: 15px; }
+
+.status-box-mini {
+    font-weight: 600;
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #fff;
+}
+.status-box-mini:first-child { margin-bottom: 10px; }
+.status-box-mini.ok { background-color: var(--success-color); }
+.status-box-mini.ok::before { content: '✅ '; }
+.status-box-mini.divergente { background-color: var(--warning-color); }
+.status-box-mini.divergente::before { content: '⚠️ '; }
+.status-box-mini.aguardando { background-color: #555; }
+
+.status {
+    margin-top: 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 5px;
+}
+.status:not(:empty) {
+    background-color: #333;
+}
+/* A REGRA VAZIA FOI REMOVIDA DAQUI */
+
+.loader {
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+}
+.hidden { display: none; }
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- NOVOS ESTILOS "SANFONA" (E110) --- */
+.btn-toggle {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    background-color: #444;
+    flex: 0;
+    min-width: auto;
+}
+.btn-toggle:hover {
+    background-color: #555;
+}
+.btn-toggle:disabled {
+    background-color: #333;
+}
+
+.card-body-hidden {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 20px; /* Prepara o padding */
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
+.card-body-hidden.open {
+    max-height: 1000px; /* Altura máxima para a animação */
+    padding: 20px 20px; /* Revela o padding */
+    transition: max-height 0.5s ease-in, padding 0.5s ease-in;
+}
+
+/* Tabela de Detalhes */
+#e110-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+#e110-table th, #e110-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+#e110-table th {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+#e110-table td {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 0.95rem;
+}
+#e110-table .status-ok {
+    color: var(--success-color);
+    font-weight: 700;
+}
+#e110-table .status-divergente {
+    color: var(--warning-color);
+    font-weight: 700;
+}

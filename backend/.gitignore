@@ -1,0 +1,16 @@
+# --- Ambiente Virtual do Python ---
+# Ignora a pasta do ambiente virtual
+venv/
+
+# --- Arquivos de Cache do Python ---
+# Ignora as pastas de cache
+__pycache__/
+*.pyc
+
+# --- Configurações de IDE ---
+# Ignora a pasta de configurações do VS Code
+.vscode/
+
+# --- Nosso Projeto ---
+# Ignora a pasta de uploads temporários que vamos criar
+uploads/

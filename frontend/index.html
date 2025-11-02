@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conciliador SPED</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-icon">📊</span>
+            <span class="sidebar-text">Conciliador</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="#">
+                    <span class="sidebar-icon">🏠</span>
+                    <span class="sidebar-text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="sidebar-icon">⚙️</span>
+                    <span class="sidebar-text">Configurações</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="sidebar-icon">❓</span>
+                    <span class="sidebar-text">Ajuda</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="content">
+        <h1>Dashboard de Conciliação</h1>
+        
+        <div class="card card-upload">
+            <h2>Iniciar Análise Completa</h2>
+            <div id="upload-area">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="file_sped">1. Arquivo SPED (.txt)</label>
+                        <input type="file" id="file_sped" name="file_sped" accept=".txt" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="file_livro">2. Livro Fiscal (.pdf)</label>
+                        <input type="file" id="file_livro" name="file_livro" accept=".pdf" required>
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button type="button" id="btn-processar-tudo">
+                        <span id="btn-text-processar">Processar Análise Completa</span>
+                        <div id="loader-processar" class="loader hidden"></div>
+                    </button>
+                </div>
+                
+                <div id="status-message-totais" class="status" aria-live="polite"></div>
+            </div>
+        </div>
+
+
+        <h2>Resultados da Conciliação de Totais</h2>
+
+        <div class="dashboard-grid">
+            <div id="card-entradas" class="card-resultado aguardando">
+                <div class="card-header">
+                    <h3>Conciliação de Entradas</h3>
+                    <div id="resultado-entradas" class="status-box">Aguardando...</div>
+                </div>
+                <div class="card-body">
+                    <p><strong>SPED:</strong> <span id="sped-e">--</span></p>
+                    <p><strong>Livro:</strong> <span id="livro-e">--</span></p>
+                </div>
+            </div>
+            <div id="card-saidas" class="card-resultado aguardando">
+                <div class="card-header">
+                    <h3>Conciliação de Saídas</h3>
+                    <div id="resultado-saidas" class="status-box">Aguardando...</div>
+                </div>
+                <div class="card-body">
+                    <p><strong>SPED:</strong> <span id="sped-s">--</span></p>
+                    <p><strong>Livro:</strong> <span id="livro-s">--</span></p>
+                </div>
+            </div>
+            <div id="card-apuracao" class="card-resultado card-largo aguardando">
+                <div class="card-header">
+                    <h3>Apuração de ICMS (Extra-Apuração E116)</h3>
+                </div>
+                <div class="card-body-apuracao">
+                    <div class="coluna">
+                        <h4>Valores do SPED</h4>
+                        <p>Total a Recolher: <span id="sped-a1">--</span></p>
+                        <p>Extra-Apuração: <span id="sped-a2">--</span></p>
+                    </div>
+                    <div class="coluna">
+                        <h4>Valores do Livro Fiscal</h4>
+                        <p>Valor 1 (Tabela): <span id="livro-a1">--</span></p>
+                        <p>Valor 2 (Tabela): <span id="livro-a2">--</span></p>
+                    </div>
+                    <div class="coluna-status">
+                        <div id="resultado-apuracao-1" class="status-box-mini">Aguardando...</div>
+                        <div id="resultado-apuracao-2" class="status-box-mini">Aguardando...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Resultados da Conciliação de Detalhes (Bloco E110)</h2>
+        <div class="dashboard-grid">
+            <div id="card-e110" class="card-resultado card-largo aguardando">
+                <div class="card-header">
+                    <h3>Conciliação do Bloco E110</h3>
+                    <button type="button" id="btn-toggle-e110" class="btn-toggle" disabled>Exibir Detalhes</button>
+                </div>
+                <div id="e110-details" class="card-body-hidden">
+                    <table id="e110-table">
+                        </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
