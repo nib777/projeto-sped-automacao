@@ -2,9 +2,9 @@ import os
 import sys
 import subprocess
 import shutil
-import uuid # Para criar nomes de arquivo únicos
-import json # Para ler o JSON
-import re   # Para achar o JSON no log
+import uuid 
+import json 
+import re   
 from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -16,8 +16,7 @@ app = FastAPI()
 CAMINHO_DO_SCRIPT_ATUAL = os.path.dirname(os.path.abspath(__file__))
 CAMINHO_WALL_E = os.path.join(CAMINHO_DO_SCRIPT_ATUAL, "wall-e.py")
 CAMINHO_LER_PDF = os.path.join(CAMINHO_DO_SCRIPT_ATUAL, "ler_pdf.py")
-# --- CORREÇÃO DE NOME: Vamos chamar o script que você tem ---
-CAMINHO_ANALISAR_DETALHES = os.path.join(CAMINHO_DO_SCRIPT_ATUAL, "conciliar_bloco_E.py")
+CAMINHO_ANALISAR_DETALHES = os.path.join(CAMINHO_DO_SCRIPT_ATUAL, "analisar_detalhes.py") # Nome CORRETO
 CAMINHO_FRONTEND = os.path.join(os.path.dirname(CAMINHO_DO_SCRIPT_ATUAL), "frontend")
 PASTA_UPLOADS = os.path.join(CAMINHO_DO_SCRIPT_ATUAL, "temp_uploads")
 os.makedirs(PASTA_UPLOADS, exist_ok=True)
@@ -27,14 +26,15 @@ def _limpar_arquivos(caminhos_dos_arquivos):
     """
     Função auxiliar para apagar arquivos temporários em background.
     """
-    print(f"\nTAREFA DE LIMPEZA: Apagando arquivos: {caminhos_dos_arquivos}")
+    # Imprime no log de erro (stderr) para não poluir o JSON (stdout)
+    print(f"\nTAREFA DE LIMPEZA: Apagando arquivos: {caminhos_dos_arquivos}", file=sys.stderr)
     for caminho in caminhos_dos_arquivos:
         if caminho and os.path.exists(caminho):
             try:
                 os.remove(caminho)
-                print(f"Arquivo {os.path.basename(caminho)} apagado.")
+                print(f"Arquivo {os.path.basename(caminho)} apagado.", file=sys.stderr)
             except Exception as e:
-                print(f"AVISO: Não foi possível apagar o arquivo {caminho}. Erro: {e}")
+                print(f"AVISO: Não foi possível apagar o arquivo {caminho}. Erro: {e}", file=sys.stderr)
 
 # --- FUNÇÕES DE EXECUÇÃO CORRIGIDAS ---
 
@@ -53,20 +53,20 @@ async def _executar_wall_e(command, log_name="Wall-E"):
             errors='ignore'
         )
         # Apenas imprime o log de erro (stderr) e de saída (stdout)
-        print(f"--- Log do {log_name} (stdout) ---")
-        print(resultado.stdout)
-        print(f"--- Log do {log_name} (stderr) ---")
-        print(resultado.stderr)
-        print(f"--- Fim do Log do {log_name} ---")
+        print(f"--- Log do {log_name} (stdout) ---", file=sys.stderr)
+        print(resultado.stdout, file=sys.stderr)
+        print(f"--- Log do {log_name} (stderr) ---", file=sys.stderr)
+        print(resultado.stderr, file=sys.stderr)
+        print(f"--- Fim do Log do {log_name} ---", file=sys.stderr)
         return True # Sucesso
         
     except subprocess.CalledProcessError as e:
-        print(f"ERRO FATAL: O script '{log_name}' falhou:")
-        print(e.stdout)
-        print(e.stderr)
+        print(f"ERRO FATAL: O script '{log_name}' falhou:", file=sys.stderr)
+        print(e.stdout, file=sys.stderr)
+        print(e.stderr, file=sys.stderr)
         raise Exception(f"Erro no {log_name}: {e.stderr} {e.stdout}")
     except Exception as e:
-        print(f"Erro inesperado no servidor ao rodar {log_name}: {e}")
+        print(f"Erro inesperado no servidor ao rodar {log_name}: {e}", file=sys.stderr)
         raise Exception(f"Erro inesperado no {log_name}: {e}")
 
 async def _executar_script_com_json(command, log_name="Script"):
@@ -87,26 +87,26 @@ async def _executar_script_com_json(command, log_name="Script"):
         log_de_erros = resultado.stderr
         saida_json_string = resultado.stdout
         
-        print(f"--- Log do {log_name} (stderr) ---")
-        print(log_de_erros)
-        print(f"--- Fim do Log do {log_name} ---")
+        print(f"--- Log do {log_name} (stderr) ---", file=sys.stderr)
+        print(log_de_erros, file=sys.stderr)
+        print(f"--- Fim do Log do {log_name} ---", file=sys.stderr)
 
         # Tenta decodificar o JSON
         try:
             dados_json = json.loads(saida_json_string)
             return dados_json
         except json.JSONDecodeError as e:
-            print(f"ERRO FATAL: {log_name} não produziu um JSON válido.")
-            print(f"Saída com erro: {saida_json_string}")
+            print(f"ERRO FATAL: {log_name} não produziu um JSON válido.", file=sys.stderr)
+            print(f"Saída com erro: {saida_json_string}", file=sys.stderr)
             raise Exception(f"Falha ao decodificar JSON do {log_name}: {e}")
 
     except subprocess.CalledProcessError as e:
-        print(f"ERRO FATAL: O script '{log_name}' falhou:")
-        print(e.stdout)
-        print(e.stderr)
+        print(f"ERRO FATAL: O script '{log_name}' falhou:", file=sys.stderr)
+        print(e.stdout, file=sys.stderr)
+        print(e.stderr, file=sys.stderr)
         raise Exception(f"Erro no {log_name}: {e.stderr} {e.stdout}")
     except Exception as e:
-        print(f"Erro inesperado no servidor ao rodar {log_name}: {e}")
+        print(f"Erro inesperado no servidor ao rodar {log_name}: {e}", file=sys.stderr)
         raise Exception(f"Erro inesperado no {log_name}: {e}")
 
 
@@ -134,7 +134,6 @@ async def processar_tudo(
     
     try:
         with open(path_sped_txt, "wb") as buffer: shutil.copyfileobj(file_sped.file, buffer)
-        # --- CORREÇÃO AQUI: (file_livro.file) ---
         with open(path_livro_pdf, "wb") as buffer: shutil.copyfileobj(file_livro.file, buffer)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao salvar arquivos: {e}")
@@ -142,26 +141,27 @@ async def processar_tudo(
         file_sped.file.close()
         file_livro.file.close()
 
-    print(f"Arquivos recebidos. Iniciando Processo Completo...")
+    print(f"Arquivos recebidos. Iniciando Processo Completo...", file=sys.stderr)
 
     try:
         # --- AÇÃO 1: RODAR O WALL-E (NÃO ESPERA JSON) ---
-        print("\n--- ETAPA 1: RODANDO O ROBÔ (WALL-E) ---")
+        print("\n--- ETAPA 1: RODANDO O ROBÔ (WALL-E) ---", file=sys.stderr)
         await _executar_wall_e([sys.executable, CAMINHO_WALL_E, path_sped_txt, path_livro_pdf], "Wall-E")
-        print("--- ETAPA 1 (WALL-E) CONCLUÍDA ---")
+        print("--- ETAPA 1 (WALL-E) CONCLUÍDA ---", file=sys.stderr)
 
         # --- AÇÃO 2: RODAR O ANALISADOR DE TOTAIS (ESPERA JSON) ---
-        print("\n--- ETAPA 2: RODANDO O ANALISADOR DE TOTAIS (LER_PDF) ---")
+        print("\n--- ETAPA 2: RODANDO O ANALISADOR DE TOTAIS (LER_PDF) ---", file=sys.stderr)
         json_totais = await _executar_script_com_json([sys.executable, CAMINHO_LER_PDF, path_livro_pdf], "Ler_PDF (Totais)")
-        print("--- ETAPA 2 (LER_PDF) CONCLUÍDA ---")
+        print("--- ETAPA 2 (LER_PDF) CONCLUÍDA ---", file=sys.stderr)
 
         # --- AÇÃO 3: RODAR O EXTRATOR DE DETALHES (ESPERA JSON) ---
-        print("\n--- ETAPA 3: RODANDO O CONCILIADOR DE DETALHES (BLOCO E) ---")
+        print("\n--- ETAPA 3: RODANDO O CONCILIADOR DE DETALHES (BLOCO E) ---", file=sys.stderr)
+        # --- CORREÇÃO FINAL: Passando o path_livro_pdf (o segundo argumento) ---
         json_detalhes = await _executar_script_com_json(
-            [sys.executable, CAMINHO_ANALISAR_DETALHES, path_sped_txt, path_livro_pdf], # Passa os dois arquivos
-            "Conciliar_Bloco_E"
+            [sys.executable, CAMINHO_ANALISAR_DETALHES, path_sped_txt, path_livro_pdf], 
+            "Analisar_Detalhes (Bloco E)"
         )
-        print("--- ETAPA 3 (CONCILIAR_BLOCO_E) CONCLUÍDA ---")
+        print("--- ETAPA 3 (ANALISAR_DETALHES) CONCLUÍDA ---", file=sys.stderr)
         
         # --- AÇÃO 4: COMBINAR OS JSONS ---
         json_final = {
@@ -169,12 +169,12 @@ async def processar_tudo(
             "conciliacao_detalhes": json_detalhes
         }
         
-        print("\nProcesso completo finalizado. Enviando JSON final para o frontend.")
+        print("\nProcesso completo finalizado. Enviando JSON final para o frontend.", file=sys.stderr)
         return JSONResponse(content=json_final)
 
     except Exception as e:
         # Pega qualquer erro que as funções _executar_script lançarem
-        print(f"ERRO no fluxo principal: {e}")
+        print(f"ERRO no fluxo principal: {e}", file=sys.stderr)
         raise HTTPException(status_code=500, detail=str(e))
     # (A limpeza já está agendada no background_tasks)
 

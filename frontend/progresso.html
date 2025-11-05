@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Progresso</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="progresso.css">
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-icon">📊</span>
+            <span class="sidebar-text">Conciliador</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="/">
+                    <span class="sidebar-icon">🏠</span>
+                    <span class="sidebar-text">Conciliação</span>
+                </a>
+            </li>
+            <li>
+                <a href="/progresso">
+                    <span class="sidebar-icon">📈</span>
+                    <span class="sidebar-text">Progresso</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="sidebar-icon">⚙️</span>
+                    <span class="sidebar-text">Configurações</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="sidebar-icon">❓</span>
+                    <span class="sidebar-text">Ajuda</span>
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <div class="profile-pic">
+                <span>NM</span>
+            </div>
+            <div class="profile-info">
+                <span class="profile-name">Nibson Muller</span>
+                <span class="profile-status">
+                    <span class="online-dot"></span> Online
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        
+        <header class="top-bar">
+            <button id="menu-toggle-btn" title="Abrir Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <span class="top-bar-title">Dashboard de Progresso</span>
+        </header>
+        
+        <main class="content">
+            
+            <div class="progresso-grid-status">
+                <div class="card-status card-concluidas">
+                    <span class="status-valor">10</span>
+                    <span class="status-titulo">Concluídas</span>
+                </div>
+                <div class="card-status card-progresso">
+                    <span class="status-valor">5</span>
+                    <span class="status-titulo">Em Progresso</span>
+                </div>
+                <div class="card-status card-paradas">
+                    <span class="status-valor">5</span>
+                    <span class="status-titulo">Paradas</span>
+                </div>
+                <div class="card-status card-total">
+                    <span class="status-valor">20</span>
+                    <span class="status-titulo">Total de Empresas</span>
+                </div>
+            </div>
+
+            <h2>Gráficos de Evolução</h2>
+            <div class="progresso-grid-graficos">
+                <div class="card card-largo-metade">
+                    <h3>Status Geral das Empresas</h3>
+                    <div class="grafico-container" id="grafico-pizza-container">
+                        <canvas id="graficoPizza"></canvas>
+                    </div>
+                </div>
+
+                <div class="card card-largo-metade">
+                    <h3>Empresas Concluídas por Mês</h3>
+                    <div class="grafico-container" id="grafico-linha-container">
+                        <canvas id="graficoLinha"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="progresso.js"></script>
+
+    <script src="app.js"></script> 
+</body>
+</html>

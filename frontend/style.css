@@ -11,8 +11,9 @@
     --accent-green-hover: #0a5d0a;
     --success-color: #107c10;
     --warning-color: #d83b01;
+    --online-color: #28a745;
     --sidebar-width: 240px;
-    --sidebar-width-recolhido: 70px;
+    --top-bar-height: 60px;
 }
 
 body {
@@ -20,11 +21,10 @@ body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     margin: 0;
-    padding-left: var(--sidebar-width-recolhido);
-    transition: padding-left 0.3s ease-in-out;
+    padding: 0;
 }
 
-/* --- SEU MENU LATERAL (ESTILO GEMINI/POWER BI) --- */
+/* --- MENU LATERAL (Sidebar) --- */
 .sidebar {
     position: fixed;
     left: 0;
@@ -33,13 +33,14 @@ body {
     width: var(--sidebar-width);
     background-color: #1a1a1a;
     border-right: 1px solid var(--border-color);
-    transform: translateX(calc(var(--sidebar-width-recolhido) - var(--sidebar-width)));
+    transform: translateX(-100%); 
     transition: transform 0.3s ease-in-out;
-    z-index: 1000;
-    overflow: hidden;
+    z-index: 1001; 
+    display: flex; 
+    flex-direction: column; 
 }
-.sidebar:hover {
-    transform: translateX(0);
+.sidebar.open {
+    transform: translateX(0); 
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 .sidebar-header, .sidebar-menu li a {
@@ -52,6 +53,7 @@ body {
     font-size: 1.25rem;
     font-weight: 600;
     color: #fff;
+    flex-shrink: 0; 
 }
 .sidebar-icon {
     font-size: 1.5rem;
@@ -62,6 +64,8 @@ body {
 .sidebar-menu {
     list-style: none;
     padding: 0 15px;
+    flex-grow: 1; 
+    overflow-y: auto; 
 }
 .sidebar-menu li a {
     padding: 12px 10px;
@@ -74,25 +78,117 @@ body {
     background-color: var(--card-color);
     color: #fff;
 }
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; 
+    background-color: #111;
+}
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 15px;
+}
+.profile-info {
+    display: flex;
+    flex-direction: column;
+}
+.profile-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+.profile-status {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+}
+.online-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--online-color);
+    border-radius: 50%;
+    margin-right: 6px;
+    box-shadow: 0 0 5px var(--online-color);
+}
+
+/* --- Estrutura do Conteúdo e Top Bar --- */
+.content-wrapper {
+    margin-left: 0; 
+    transition: margin-left 0.3s ease-in-out;
+}
+.sidebar.open ~ .content-wrapper {
+    margin-left: var(--sidebar-width); 
+}
+.top-bar {
+    height: var(--top-bar-height);
+    background-color: var(--card-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+#menu-toggle-btn {
+    background: none;
+    border: none;
+    padding: 10px;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 24px;
+    height: 24px;
+    min-width: auto;
+    flex: none;
+}
+#menu-toggle-btn span {
+    width: 100%;
+    height: 3px;
+    background-color: var(--text-primary);
+    border-radius: 2px;
+}
+#menu-toggle-btn:hover span {
+    background-color: var(--accent-color);
+}
+.top-bar-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-left: 20px;
+}
 
 /* --- CONTEÚDO PRINCIPAL (DASHBOARD) --- */
 .content {
-    margin-left: 0;
     padding: 30px 40px;
     max-width: 1400px;
 }
-h1, h2 {
+h2 {
     font-weight: 600;
     border-bottom: 2px solid var(--border-color);
     padding-bottom: 10px;
-    margin-top: 0;
+    margin-top: 40px; 
 }
-h2 {
-    margin-top: 40px;
-    font-size: 1.5rem;
+h2:first-of-type {
+    margin-top: 0; /* O primeiro h2 não tem margem */
+}
+.card-upload + h2 {
+     margin-top: 40px; /* Adiciona espaço após o card de upload */
 }
 
-/* --- CARD DE UPLOAD OTIMIZADO --- */
+/* --- CARD DE UPLOAD --- */
 .card {
     background-color: var(--card-color);
     border-radius: 8px;
@@ -123,14 +219,11 @@ h2 {
     font-size: 0.9rem;
     color: #ccc;
 }
-
-/* --- LINHA DE BOTÕES --- */
 .button-row {
     display: flex;
-    gap: 15px; /* Espaço entre os botões */
+    gap: 15px; 
     margin-top: 25px;
 }
-
 button {
     background-color: var(--accent-color);
     color: white;
@@ -145,7 +238,7 @@ button {
     align-items: center;
     justify-content: center;
     min-width: 120px;
-    flex: 1; /* Faz os botões ocuparem o espaço */
+    flex: 1; 
 }
 button:hover {
     background-color: var(--accent-hover);
@@ -234,7 +327,10 @@ button:disabled {
 .status:not(:empty) {
     background-color: #333;
 }
-/* A REGRA VAZIA FOI REMOVIDA DAQUI */
+.status-success:not(:empty) {
+    background-color: var(--accent-green);
+    color: #fff;
+}
 
 .loader {
     width: 18px;
@@ -250,58 +346,150 @@ button:disabled {
     to { transform: rotate(360deg); }
 }
 
-/* --- NOVOS ESTILOS "SANFONA" (E110) --- */
-.btn-toggle {
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 5px 10px;
-    background-color: #444;
-    flex: 0;
-    min-width: auto;
-}
-.btn-toggle:hover {
-    background-color: #555;
-}
-.btn-toggle:disabled {
-    background-color: #333;
+/* --- Análise Manual --- */
+
+.card-body-detalhamento {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
 }
 
-.card-body-hidden {
-    max-height: 0;
-    overflow: hidden;
-    padding: 0 20px; /* Prepara o padding */
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-}
-.card-body-hidden.open {
-    max-height: 1000px; /* Altura máxima para a animação */
-    padding: 20px 20px; /* Revela o padding */
-    transition: max-height 0.5s ease-in, padding 0.5s ease-in;
+.coluna-detalhe {
+    flex: 1;
+    min-width: 300px; 
 }
 
-/* Tabela de Detalhes */
-#e110-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-}
-#e110-table th, #e110-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-#e110-table th {
+.coluna-detalhe h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
     color: var(--text-secondary);
     font-weight: 600;
 }
-#e110-table td {
+
+/* Filtros do Bloco E */
+.bloco-e-filtros {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+.filtro-btn {
+    flex: none; 
+    min-width: auto;
+    background-color: transparent;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid transparent;
+    border-bottom: none;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+.filtro-btn:hover {
+    background-color: var(--card-color);
+    color: #fff;
+}
+.filtro-btn.active {
+    background-color: var(--bg-color);
+    color: var(--accent-color);
+    font-weight: bold;
+    border-color: var(--border-color);
+}
+
+/* Container da Tabela (Scroll) */
+.tabela-container {
+    height: 355px;
+    overflow-y: auto; 
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+}
+
+/* Tabela do Bloco E */
+#bloco-e-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 0.9rem;
+    white-space: nowrap; 
+}
+#bloco-e-table tr:hover td {
+    background-color: #383838;
+}
+#bloco-e-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border-color);
+    border-right: 1px solid #333; 
+    color: #ccc;
+}
+#bloco-e-table td:first-child {
+    border-left: 3px solid var(--accent-color); 
+    font-weight: bold;
+}
+#bloco-e-table tr.reg-e110 td { color: #ffc600; font-weight: bold; }
+#bloco-e-table tr.reg-e111 td { color: #61dafb; font-weight: bold; }
+#bloco-e-table tr.reg-e116 td { color: #a991f8; }
+#bloco-e-table tr.reg-e001 td { color: #888; font-style: italic; }
+#bloco-e-table td.valor-monetario {
+    color: var(--accent-green);
+    font-weight: bold;
+    text-align: right;
+    background-color: #2a3a2a;
+}
+#bloco-e-table td.codigo-ajuste {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* Tabela de Detalhamento (Direita) */
+#detalhamento-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+#detalhamento-table th, 
+#detalhamento-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+#detalhamento-table th {
+    background-color: #333; 
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    position: sticky; 
+    top: 0;
+}
+#detalhamento-table td:first-child {
+    font-family: "Consolas", "Courier New", monospace;
+    font-weight: 600;
+    color: var(--accent-color);
+    font-size: 0.9rem;
+}
+#detalhamento-table td:last-child {
+    font-weight: 600;
+    text-align: right;
+    font-size: 0.9rem;
+}
+
+/* --- Card de Alertas E111 --- */
+#card-alertas .card-body p {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+#lista-alertas-codigos {
+    padding-left: 20px;
+    margin: 0;
     font-family: "Consolas", "Courier New", monospace;
     font-size: 0.95rem;
 }
-#e110-table .status-ok {
-    color: var(--success-color);
-    font-weight: 700;
+#lista-alertas-codigos li {
+    color: var(--warning-color); /* Cor do alerta */
+    font-weight: 600;
+    margin-bottom: 8px;
 }
-#e110-table .status-divergente {
-    color: var(--warning-color);
-    font-weight: 700;
+/* Estilo para a lista quando está OK */
+#card-alertas.ok #lista-alertas-codigos li {
+    color: var(--success-color);
+    font-weight: normal;
 }
